@@ -44,11 +44,54 @@ public class Orador {
 			this.nombre = "N/D";
 		}
 	}
-	public String getNombre() {
-		return this.nombre;
-	}
+
         
         //automaticamente creo los getters y setter con ctrl + shift + s
 	
-        
+	public String getNombre() {
+		return this.nombre;
+	}
+ 
+	public String getApellido() {
+		return apellido;
+	}
+	public void setApellido(String apellido) {
+		if(apellido != null) {
+			this.apellido = apellido;
+		}else {
+			this.apellido = "N/D";
+		}
+	}
+	
+	public String getMail() {
+		return mail;
+	}
+	
+	public void setMail(String mail) {
+		if(mail != null) {
+			this.mail = mail;
+		}else {
+			this.mail = "N/D";
+		}
+	}
+	
+	public String getTema() {
+		return tema;
+	}
+	
+	public void setTema(String tema) {
+		if(tema != null) {
+			this.tema = tema;
+		}else {
+			this.tema = "N/D";
+		}
+	}
+	
+	public LocalDate getFechaAlta() {
+		return fechaAlta;
+	}
+	
+	public void setFechaAlta(LocalDate fechaAlta) {
+		this.fechaAlta = fechaAlta;
+	}
 }
