@@ -1,14 +1,11 @@
 package ar.com.codoacodo.repository;
 
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.LocalDate;
-import java.util.List;
-
-import ar.com.codoacodo.entity.Orador;
-
 import java.util.List;
 
 import ar.com.codoacodo.entity.Orador;
@@ -33,6 +30,8 @@ public class MySQLOradorRepository implements OradorRepository {
 			statement.setString(3, orador.getMail());
 			statement.setString(4, orador.getTema());
 			statement.setDate(5, new java.sql.Date(System.currentTimeMillis())); //tph: ver como pasar de LocalDate a java.sql.Date
+			statement.setDate(5, Date.valueOf(LocalDate.now()));
+			
 			
 			statement.executeUpdate();//INSERT,UPDATE,DELETE
 		}catch (Exception e) {
@@ -62,9 +61,12 @@ public class MySQLOradorRepository implements OradorRepository {
 				String apellido = res.getString(3);
 				String tema = res.getString(4);
 				String email = res.getString(5);
-				Date fechaAlta = res.getDate(6);
+				/*LocalDate fechaAlta = res.getDate(6);*/
+				LocalDate fechaAlta = res.getDate(6).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
 				
-				orador = new Orador(id,nombre, apellido, email, tema, LocalDate.now());/*tph fechaAlta de java.sql.Date a LocalDate*/
+				orador = new Orador(id,nombre, apellido, email, tema, fechaAlta);
+				
 			}
 		}catch (Exception e) {
 			throw new IllegalArgumentException("No se pudo obtener el orador", e);
