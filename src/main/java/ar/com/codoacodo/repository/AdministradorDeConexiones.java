@@ -13,13 +13,13 @@ public class AdministradorDeConexiones {
 		//java.sql.Connection > conexion fisica contra la db
 		String host = "localhost";
 		String username = "root";
-		String password = "secret";
-		String port = "33060";
-		String dbName = "DB-23545";
+		String password = "M45S3gur*";
+		String port = "3306";
+		String dbName = "db_23545";
 		
 		String dbUrl = "jdbc:mysql://"+host+":"+port+"/"+dbName + "?serverTimeZone=UTC&useSSL=false";
 		
-		String driver = "com.mysql.cj.jdbc.Driver";
+		String driver = "com.mysql.cj.jdbc.Driver";///com.mysql.cj.jdbc.Driver
 		
 		try { //se ve en el avanzado!! 
 			Class.forName(driver);

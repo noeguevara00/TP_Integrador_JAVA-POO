@@ -13,10 +13,10 @@ public class OradorMain {
 			
 			//instancio un objeto de la clase Orador
 			//crear un orador a partir de la clase Orador
-			Orador nuevoOrador = new Orador("carlos", "lopez", "email@email.com", "java", LocalDate.now());
+			Orador nuevoOrador = new Orador("Carlos", "Lopez", "email@email.com", "java", LocalDate.now());
 			
 			//instancia de la clase orador "simulando" que viene desde la DB
-			Orador nuevoFromDB = new Orador(1L,"carlos", "lopez", "email@email.com", "java", LocalDate.now());
+			Orador nuevoFromDB = new Orador(1L,"Carlos", "Lopez", "email@email.com", "java", LocalDate.now());
 			
 			//un tipo de polimorfismo es la sobrecarga: en la misma clase tengo dos metodos o constructores  
 			//con el mismo nombre pero con distintos parametros
@@ -26,7 +26,8 @@ public class OradorMain {
 	                
 	                //si quiero saber el nombre del orador
 	                //entonces implemento un getter
-			
+
+	        
 	}
 
 

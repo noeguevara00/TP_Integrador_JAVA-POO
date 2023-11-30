@@ -6,69 +6,69 @@ import java.time.ZoneId;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import ar.com.codoacodo.entity.Orador;
 
 public class MySQLOradorRepository implements OradorRepository {
 
-	//implementar todos los metodos de la interface
-	
+	// implementar todos los metodos de la interface
+
 	@Override
 	public void save(Orador orador) {
-		String sql = "insert into orador (nombre,apellido,email,tema,fecha_alta) values(?,?,?,?,?)";
-		
-		Connection conn = AdministradorDeConexiones.getConnection();
-		
-		try {
-			//sql injection!!!
-			PreparedStatement statement  = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-			
-			//cargar los ? con los valores 
+		String sql = "insert into oradores (nombre, apellido, mail, tema, fecha_alta) values(?,?,?,?,?)";
+
+		try (Connection conn = AdministradorDeConexiones.getConnection()) {// para que conecte desconecte solo se pasa
+																			// dentro del try
+			// sql injection!!!
+			PreparedStatement statement = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+			// cargar los ? con los valores
 			statement.setString(1, orador.getNombre());
 			statement.setString(2, orador.getApellido());
 			statement.setString(3, orador.getMail());
 			statement.setString(4, orador.getTema());
-			statement.setDate(5, new java.sql.Date(System.currentTimeMillis())); //tph: ver como pasar de LocalDate a java.sql.Date
+			/* statement.setDate(5, new java.sql.Date(System.currentTimeMillis())); */ // tph: ver como pasar de
+																						// LocalDate a java.sql.Date
 			statement.setDate(5, Date.valueOf(LocalDate.now()));
-			
-			
-			statement.executeUpdate();//INSERT,UPDATE,DELETE
-		}catch (Exception e) {
-			throw new IllegalArgumentException("No se pudo crear el orador",e);
+
+			statement.executeUpdate();// INSERT,UPDATE,DELETE
+		} catch (Exception e) {
+			throw new IllegalArgumentException("No se pudo crear el orador", e);
 		}
 	}
 
 	@Override
 	public Orador getById(Long id) {
-		String sql = "select id, nombre, apellido, tema, email, fecha_alta from orador where id = ?";
-		
-		Connection conn = AdministradorDeConexiones.getConnection();
-		
+		String sql = "select id_orador, nombre, apellido, tema, mail, fecha_alta from oradores where id_orador = ?";
+
 		Orador orador = null;
-		try {
+		try (Connection conn = AdministradorDeConexiones.getConnection()) {// para que conecte desconecte solo se pasa
+																			// dentro del try
 			PreparedStatement statement = conn.prepareStatement(sql);
-			
+
 			statement.setLong(1, id);
-		
-			ResultSet res = statement.executeQuery();//SELECT
-			
-			//hay datos?
-			if(res.next()) {
-				//obtengo los datos desde el ResultSet
-				Long _id = res.getLong(1);
+
+			ResultSet res = statement.executeQuery();// SELECT
+
+			// hay datos?
+			if (res.next()) {
+				// obtengo los datos desde el ResultSet
+				Long id_orador = res.getLong(1);
 				String nombre = res.getString(2);
 				String apellido = res.getString(3);
 				String tema = res.getString(4);
-				String email = res.getString(5);
-				/*LocalDate fechaAlta = res.getDate(6);*/
-				LocalDate fechaAlta = res.getDate(6).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				String mail = res.getString(5);
+				/* LocalDate fechaAlta = res.getDate(6); */
+				
+				LocalDate fecha_alta = res.getDate(6).toLocalDate();
+				
 
-				
-				orador = new Orador(id,nombre, apellido, email, tema, fechaAlta);
-				
+				orador = new Orador(id, nombre, apellido, mail, tema, fecha_alta);
+
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new IllegalArgumentException("No se pudo obtener el orador", e);
 		}
 		return orador;
@@ -76,21 +76,68 @@ public class MySQLOradorRepository implements OradorRepository {
 
 	@Override
 	public void update(Orador orador) {
-		// TODO Auto-generated method stub
-		
+		String sql = "update oradores" + "set nombre = ?, apellido = ?, tema = ?, mail = ?" + "where id_orador = ?";
+		// try with resource
+		try (Connection conn = AdministradorDeConexiones.getConnection()) {// para que conecte desconecte solo se pasa
+																			// dentro del try
+			PreparedStatement statement = conn.prepareStatement(sql);
+
+			statement.setString(1, orador.getNombre());
+			statement.setString(2, orador.getApellido());
+			statement.setString(3, orador.getTema());
+			statement.setString(4, orador.getMail());
+			statement.setLong(5, orador.getId());
+
+			statement.executeUpdate();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("No se pudo actualizar el orador", e);
+		}
 	}
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-		
+		String sql = "delete from oradores where id_orador = ?";
+
+		try (Connection conn = AdministradorDeConexiones.getConnection()) {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("No se pudo eliminar el orador", e);
+		}
 	}
 
 	@Override
 	public List<Orador> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "select id_orador, nombre, apellido, tema, mail, fecha_alta from oradores";
+
+		List<Orador> oradores = new ArrayList<>();// ver bien power en Spring!
+		try (Connection conn = AdministradorDeConexiones.getConnection()) {
+			PreparedStatement statement = conn.prepareStatement(sql);
+
+			ResultSet res = statement.executeQuery();// SELECT
+
+			// hay datos?
+			while (res.next()) {
+				// obtengo los datos desde el ResultSet
+				Long _id = res.getLong(1);
+				String nombre = res.getString(2);
+				String apellido = res.getString(3);
+				String tema = res.getString(4);
+				String mail = res.getString(5);
+				Date fechaAlta = res.getDate(6);
+
+				Orador orador = new Orador(_id, nombre, apellido, mail, tema,
+						LocalDate.now());/* tph fechaAlta de java.sql.Date a LocalDate */
+				oradores.add(orador);
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException("No se pudo obtener el orador", e);
+		}
+
+		return oradores;
 	}
 
-
+	// implementar todos los metodos de la interface
+	
+	
 }
