@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.com.codoacodo.entity.Orador;
+import ar.com.codoacodo.interfaces.IOradorRepository;
 
-public class MySQLOradorRepository implements OradorRepository {
+public class MySQLOradorRepository implements IOradorRepository {
 
 	// implementar todos los metodos de la interface
 
@@ -126,8 +127,7 @@ public class MySQLOradorRepository implements OradorRepository {
 				String mail = res.getString(5);
 				Date fechaAlta = res.getDate(6);
 
-				Orador orador = new Orador(_id, nombre, apellido, mail, tema,
-						LocalDate.now());/* tph fechaAlta de java.sql.Date a LocalDate */
+				Orador orador = new Orador(_id, nombre, apellido, mail, tema, LocalDate.now());/* tph fechaAlta de java.sql.Date a LocalDate */
 				oradores.add(orador);
 			}
 		} catch (Exception e) {

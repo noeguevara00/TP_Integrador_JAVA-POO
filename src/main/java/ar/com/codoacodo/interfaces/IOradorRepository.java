@@ -1,11 +1,10 @@
-package ar.com.codoacodo.repository;
+package ar.com.codoacodo.interfaces;
 
-//java collection framework: en avanzado
 import java.util.List;
 
 import ar.com.codoacodo.entity.Orador;
 
-public interface OradorRepository {
+public interface IOradorRepository {
 
     public void save(Orador orador);
     public Orador getById(Long id);
@@ -13,3 +12,4 @@ public interface OradorRepository {
     public void delete(Long id);
     public List<Orador> findAll();
 }
+
