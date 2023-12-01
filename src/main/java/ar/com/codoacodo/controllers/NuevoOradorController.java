@@ -1,12 +1,15 @@
 package ar.com.codoacodo.controllers;
 
 import ar.com.codoacodo.repository.*;
+import jakarta.servlet.http.HttpServlet;
+
 import java.time.LocalDate;
+import java.util.List;
 
 import ar.com.codoacodo.entity.Orador;
 import ar.com.codoacodo.interfaces.IOradorRepository;
 
-public class NuevoOradorController {
+public class NuevoOradorController extends HttpServlet{
 
 	public static void main(String[] args) {
 
@@ -45,21 +48,46 @@ public class NuevoOradorController {
 		
 		System.out.println(nuevoOrador.toString());
 		
-		repository.save(nuevoOrador);
+		repository.save(nuevoOrador);*/
 		
-		//Se inserta otro orador con metodo save()
-		
-		/*Orador nuevoOrador2 = new Orador("Mickey", "Donald", "mickeydonald@mail.com", "Que es disney", LocalDate.now());
-		
-		System.out.println(nuevoOrador2.toString());
-		
-		repository.save(nuevoOrador2);*/
-		
+				
 		//Se elimina registro de la DB
 		
 		
 		//Se despliega lista de oradores
-		System.out.println(repository.findAll().toString());
+		List<Orador> listado = repository.findAll();
+		
+		System.out.println(listado);
+		
+		//Elimino a Panchita!
+		//repository.delete(12L);
+		
+		
+		//Vuelvo a listar para ver que ya no esta Panchita
+	//	System.out.println(repository.findAll().toString());
+		
+		
+		
+		//Se inserta otro orador con metodo save()
+		
+		//Orador nuevoOrador2 = new Orador("Mickey", "Donald", "mickeydonald@mail.com", "Que es disney", LocalDate.now());
+		
+		//System.out.println(nuevoOrador2.toString());
+		
+		//Lo guardo en la DB		
+		//repository.save(nuevoOrador2);
+		
+		//Traigo los datos de Mickey y setteo el apellido
+		Orador micky = repository.getById(13L);
+		
+		micky.setApellido("MouseDeLimon");
+		
+		//Actualizo en la BD
+		repository.update(micky);
+		
+		//Vuelvo a listar los cambios
+		System.out.println(repository.findAll());
+		
 		
 	}
 }

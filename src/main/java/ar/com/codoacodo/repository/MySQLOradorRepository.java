@@ -20,7 +20,7 @@ public class MySQLOradorRepository implements IOradorRepository {
 	public void save(Orador orador) {
 		String sql = "insert into oradores (nombre, apellido, mail, tema, fecha_alta) values(?,?,?,?,?)";
 
-		try (Connection conn = AdministradorDeConexiones.getConnection()) {// para que conecte desconecte solo se pasa
+		try (Connection conn = AdministradorDeConexiones.getConnection()) {// para que conecte desconecte, o sea abrir la conexion y cerrarla automaticamente, solo se pasa
 																			// dentro del try
 			// sql injection!!!
 			PreparedStatement statement = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -77,16 +77,17 @@ public class MySQLOradorRepository implements IOradorRepository {
 
 	@Override
 	public void update(Orador orador) {
-		String sql = "update oradores" + "set nombre = ?, apellido = ?, tema = ?, mail = ?" + "where id_orador = ?";
+		String sql = "update oradores set nombre = ?, apellido = ?, mail = ?, tema = ? where id_orador = ?";
+		
 		// try with resource
 		try (Connection conn = AdministradorDeConexiones.getConnection()) {// para que conecte desconecte solo se pasa
 																			// dentro del try
 			PreparedStatement statement = conn.prepareStatement(sql);
-
+			
 			statement.setString(1, orador.getNombre());
-			statement.setString(2, orador.getApellido());
-			statement.setString(3, orador.getTema());
-			statement.setString(4, orador.getMail());
+			statement.setString(2, orador.getApellido());			
+			statement.setString(3, orador.getMail());
+			statement.setString(4, orador.getTema());
 			statement.setLong(5, orador.getId());
 
 			statement.executeUpdate();
@@ -101,7 +102,11 @@ public class MySQLOradorRepository implements IOradorRepository {
 
 		try (Connection conn = AdministradorDeConexiones.getConnection()) {
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.executeUpdate();
+			
+			//se settea el id
+			statement.setLong(1, id);
+			 
+			statement.executeUpdate();//para ejecutar INSERT, UPDATE Y DELETE
 		} catch (Exception e) {
 			throw new IllegalArgumentException("No se pudo eliminar el orador", e);
 		}
